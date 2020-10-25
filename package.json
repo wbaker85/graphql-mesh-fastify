@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@graphql-mesh/cli": "^0.11.6",
+    "@graphql-mesh/config": "^0.10.12",
+    "@graphql-mesh/openapi": "^0.10.1",
+    "@graphql-mesh/runtime": "^0.7.11",
+    "fastify": "^3.7.0",
+    "mercurius": "^6.4.0"
+  }
+}
