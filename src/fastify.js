@@ -3,31 +3,28 @@ const mercurius = require('mercurius');
 const { getMesh } = require('@graphql-mesh/runtime');
 const { findAndParseConfig } = require('@graphql-mesh/config');
 
+const { schema } = require('./config/schema');
+const resolvers = require('./config/resolvers');
+
 const app = Fastify();
 
-const schema = `
-  type Query {
-    add(x: Int, y: Int): Int
-  }
-`;
-
-const resolvers = {
-  Query: {
-    add: async (_, { x, y }) => x + y,
-  },
+// eslint-disable-next-line no-unused-vars
+let contextGen = (request, reply) => {
+  return {
+    userId: 1234,
+  };
 };
 
-let context = () => {};
+const context = (request, reply) => {
+  return contextGen(request, reply);
+};
 
 const updateSchema = async () => {
-  console.log('******');
   console.log('Updating schema....');
   const meshConfig = await findAndParseConfig();
   const { schema, contextBuilder } = await getMesh(meshConfig);
-  context = contextBuilder;
+  contextGen = await contextBuilder;
   app.graphql.replaceSchema(schema);
-  console.log('Schema updated!');
-  console.log('******');
 };
 
 app.register(mercurius, {
@@ -42,4 +39,4 @@ app.listen(4000).then(() => {
 });
 
 // updateSchema();
-setInterval(updateSchema, 15000);
+setInterval(updateSchema, 5000);
